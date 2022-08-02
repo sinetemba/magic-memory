@@ -7,12 +7,12 @@ import SingleCard from './components/SingleCard'
  * The array won't get recreated everytime the component is reevaluated
 */
 const cardImages = [
-  { "src": "/img/helmet-1.png" },
-  { "src": "/img/potion-1.png" },
-  { "src": "/img/ring-1.png" },
-  { "src": "/img/scroll-1.png" },
-  { "src": "/img/shield-1.png" },
-  { "src": "/img/sword-1.png" },
+  { "src": "/img/helmet-1.png", matched: false },
+  { "src": "/img/potion-1.png" , matched: false},
+  { "src": "/img/ring-1.png" , matched: false},
+  { "src": "/img/scroll-1.png", matched: false },
+  { "src": "/img/shield-1.png" , matched: false},
+  { "src": "/img/sword-1.png", matched: false },
 ]
 
 
@@ -49,14 +49,27 @@ function App() {
       if(choiceOne && choiceTwo){
 
         if(choiceOne.src === choiceTwo.src){
-          console.log("selected cards match")
+          //updating the card state, by taking the prev card state
+          setCards(prevCards => {
+            return prevCards.map(card => {
+              if(card.src === choiceOne.src) {
+                  //setting cards macthed property to true
+                 return {...card, matched: true}
+              } else{
+                 return card
+              }
+            })
+          })
+
           resetTurn()
         } else{
-          console.log("selected cards do not match")
+          
           resetTurn()
         }
       }
   }, [choiceOne, choiceTwo])
+
+  console.log(cards)
 
   //reset choice and increase turn count
   const resetTurn = () => {

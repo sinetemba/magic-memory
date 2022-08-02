@@ -22,6 +22,7 @@ function App() {
   const [turns, setTurns] = useState(0)
   const [choiceOne, setChoiceOne] = useState(null)
   const [choiceTwo, setChoiceTwo] = useState(null)
+  const [disabled, setDisabled] = useState(false)
 
 
 
@@ -31,6 +32,8 @@ function App() {
       .sort(() => Math.random() - 0.5)
       .map(card => ({ ...card, id: Math.random() }))
       
+    setChoiceOne(null)
+    setChoiceTwo(null)
     setCards(shuffledCards)
     setTurns(0)
   }
@@ -46,7 +49,10 @@ function App() {
    * depandencies in this case are [choiceOne, choiceTwo] (whenever they are updated it will fire)
    */
   useEffect(() => {
+    
       if(choiceOne && choiceTwo){
+         
+        setDisabled(true)
 
         if(choiceOne.src === choiceTwo.src){
           //updating the card state, by taking the prev card state
@@ -76,7 +82,13 @@ function App() {
     setChoiceOne(null)
     setChoiceTwo(null)
     setTurns(prevTurns => prevTurns + 1)
+    setDisabled(false)
   }
+
+  //start new game automatically
+  useEffect(() => {
+  shuffleCards();
+  }, [])
 
   return (
     <div className="App">
@@ -90,10 +102,11 @@ function App() {
            card={card}
            handleChoice={handleChoice}
            flipped={card === choiceOne || card === choiceTwo || card.matched}
+           disabled={disabled}
            />
         ))}
       </div>
-
+      <p>Turns: {turns}</p>
     </div>
   );
 }
